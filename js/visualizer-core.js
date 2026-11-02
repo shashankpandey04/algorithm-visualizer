@@ -1,5 +1,5 @@
 
-export function createVisualizer({ generateSteps, initialArray }) {
+function createVisualizer({ generateSteps, initialArray }) {
   const get = (id) => document.getElementById(id);
 
   const ui = {

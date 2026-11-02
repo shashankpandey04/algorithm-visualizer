@@ -1,6 +1,4 @@
 
-import { createVisualizer } from "../visualizer-core.js";
-
 function generateInsertionSortSteps(input) {
   const array = [...input];
   const steps = [];

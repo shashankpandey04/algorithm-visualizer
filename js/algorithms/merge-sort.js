@@ -1,6 +1,4 @@
 
-import { createVisualizer } from "../visualizer-core.js";
-
 const initialArray = [42, 18, 65, 23, 9, 51, 34, 76];
 
 function generateSteps(input) {
