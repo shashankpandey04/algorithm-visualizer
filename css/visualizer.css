@@ -774,6 +774,18 @@ a {
   font-size: 9px;
 }
 
+.lesson-actions .ai-explanation {
+  flex: 1;
+  color: var(--secondary);
+  font-size: 9px;
+  line-height: 1.5;
+}
+
+.lesson-next-button:disabled {
+  cursor: wait;
+  opacity: 0.6;
+}
+
 .lesson-next-button {
   padding: 8px 12px;
   border: 0;

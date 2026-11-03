@@ -1,6 +1,9 @@
 
 function createVisualizer({ generateSteps, initialArray }) {
   const get = (id) => document.getElementById(id);
+  const algorithmName = document.querySelector("h1")?.textContent
+    .replace(/[.]/g, "")
+    .trim() || document.title.split(" —")[0];
 
   const ui = {
     bars: get("bars"),
@@ -44,6 +47,9 @@ function createVisualizer({ generateSteps, initialArray }) {
   let timer = null;
   let playing = false;
   let mode = "learn";
+  let aiButton = null;
+  let aiOutput = null;
+  let aiRequestId = 0;
 
   function stop() {
     if (timer !== null) {
@@ -149,6 +155,15 @@ function createVisualizer({ generateSteps, initialArray }) {
     if (!step) return;
 
     currentStep = stepIndex;
+    aiRequestId++;
+
+    if (aiOutput) {
+      aiOutput.textContent = "";
+    }
+
+    if (aiButton) {
+      aiButton.disabled = false;
+    }
 
     renderBars(step);
     renderLesson(step);
@@ -171,6 +186,28 @@ function createVisualizer({ generateSteps, initialArray }) {
       );
     });
 
+    window.ALGOVIZ_STATE = {
+      algorithm: algorithmName,
+      category: "sorting",
+      mode,
+      array: step.array,
+      step: {
+        label: step.label,
+        title: step.title,
+        explanation: step.explanation,
+        next: step.next,
+        line: step.line,
+        comparisons: step.comparisons,
+        swaps: step.swaps,
+        pass: step.pass,
+        comparing: step.comparing,
+        swapping: step.swapping,
+        sorted: step.sorted,
+        done: step.done
+      },
+      progress: `${currentStep + 1} / ${steps.length}`
+    };
+
     if (step.done) {
       updateStatus("Completed", "complete");
     } else if (playing) {
@@ -182,6 +219,67 @@ function createVisualizer({ generateSteps, initialArray }) {
     }
 
     updatePlaybackControls();
+  }
+
+  function setupAiExplainer() {
+    if (!ui.lessonNextButton || !ui.lessonNextButton.parentElement) return;
+
+    aiButton = document.createElement("button");
+    aiButton.className = "lesson-next-button ai-explain-button";
+    aiButton.type = "button";
+    aiButton.textContent = "Explain with Groq";
+
+    aiOutput = document.createElement("span");
+    aiOutput.className = "ai-explanation";
+    aiOutput.setAttribute("aria-live", "polite");
+
+    const actions = ui.lessonNextButton.parentElement;
+    actions.insertBefore(aiOutput, ui.lessonNextButton);
+    actions.insertBefore(aiButton, ui.lessonNextButton);
+
+    aiButton.addEventListener("click", async () => {
+      const requestId = ++aiRequestId;
+      const step = steps[currentStep];
+
+      aiButton.disabled = true;
+      aiOutput.textContent = "Asking Groq...";
+
+      try {
+        const response = await fetch("/api/explain-step", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            algorithm: document.title.split(" —")[0],
+            array: step.array,
+            step: {
+              title: step.title,
+              explanation: step.explanation,
+              next: step.next,
+              comparisons: step.comparisons,
+              swaps: step.swaps
+            }
+          })
+        });
+        const result = await response.json();
+
+        if (requestId !== aiRequestId) return;
+        if (!response.ok) {
+          throw new Error(result.error || "Groq request failed.");
+        }
+
+        aiOutput.textContent = result.explanation;
+      } catch (error) {
+        if (requestId === aiRequestId) {
+          aiOutput.textContent = error.message.includes("Failed to fetch")
+            ? "Start the Flask app to use Groq explanations."
+            : error.message;
+        }
+      } finally {
+        if (requestId === aiRequestId) {
+          aiButton.disabled = false;
+        }
+      }
+    });
   }
 
   function buildTimeline() {
@@ -383,6 +481,7 @@ function createVisualizer({ generateSteps, initialArray }) {
     });
   });
 
+  setupAiExplainer();
   buildTimeline();
 
   return {

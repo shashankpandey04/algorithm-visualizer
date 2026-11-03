@@ -11,7 +11,10 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700;800&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="css/global.css" />
+  <link rel="stylesheet" href="css/overhaul.css" />
+  <link rel="stylesheet" href="css/tutor.css" />
   <script src="js/app.js" defer></script>
+  <script src="js/ai-tutor.js" defer></script>
 </head>
 <body>
   <header class="site-header">
@@ -29,6 +32,7 @@
       <div class="nav-links" id="navLinks">
         <a href="#explore">Explore</a>
         <a href="#how-it-works">How it works</a>
+        <a href="#ai-tutor">AI tutor</a>
         <a href="#about">About</a>
         <a href="#explore" class="nav-cta">Start learning <span>↗</span></a>
       </div>
@@ -400,6 +404,25 @@
             <p>Follow the pseudocode, track operations, and connect the code to what you see.</p>
           </div>
         </div>
+      </div>
+    </section>
+
+    <section class="ai-feature-section container" id="ai-tutor">
+      <div class="ai-feature-copy reveal">
+        <div class="eyebrow"><span class="eyebrow-dot"></span>WHEN YOU GET STUCK</div>
+        <h2>Ask a question.<br /><span>Keep moving.</span></h2>
+        <p>
+          The AI Tutor sees the algorithm, the current data, and the exact step
+          on screen. Ask why a value moved, what happens next, or how the
+          pseudocode connects to the animation.
+        </p>
+        <a href="#explore" class="button button-primary">Open a visualizer <span>→</span></a>
+      </div>
+      <div class="ai-feature-preview reveal" aria-label="AI Tutor preview">
+        <div class="ai-preview-topline"><span>ALGOVIZ / TUTOR</span><span class="ai-preview-live">● CONTEXT AWARE</span></div>
+        <div class="ai-preview-context"><span>ACTIVE CONTEXT</span><strong>Quick Sort · Partition 2</strong></div>
+        <div class="ai-preview-message ai-preview-user">Why did the pivot move here?</div>
+        <div class="ai-preview-message ai-preview-answer">The pivot is now between the values smaller than it on the left and larger values on the right. That position is final, so the next steps only sort the two remaining sections.</div>
       </div>
     </section>
 

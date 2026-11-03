@@ -7,6 +7,9 @@ export function createSearchVisualizer({
   createRandomArray
 }) {
   const get = (id) => document.getElementById(id);
+  const algorithmName = document.querySelector("h1")?.textContent
+    .replace(/[.]/g, "")
+    .trim() || document.title.split(" —")[0];
 
   const ui = {
     array: get("searchArray"),
@@ -242,6 +245,32 @@ export function createSearchVisualizer({
 
     ui.progress.value = percentage;
     ui.progressLabel.textContent = `${percentage}%`;
+
+    window.ALGOVIZ_STATE = {
+      algorithm: algorithmName,
+      category: "searching",
+      mode,
+      array: step.array,
+      target,
+      step: {
+        label: step.label,
+        title: step.title,
+        explanation: step.explanation,
+        next: step.next,
+        line: step.line,
+        comparisons: step.comparisons,
+        checked: step.checkedIndices,
+        remaining: step.remainingCount,
+        low: step.low,
+        high: step.high,
+        mid: step.mid,
+        activeIndex: step.activeIndex,
+        foundIndex: step.foundIndex,
+        done: step.done,
+        notFound: step.notFound
+      },
+      progress: `${currentStep + 1} / ${steps.length}`
+    };
 
     if (step.done) {
       setStatus(

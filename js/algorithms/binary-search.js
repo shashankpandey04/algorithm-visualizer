@@ -394,6 +394,32 @@ function render() {
   renderStatus(step);
   renderControls();
 
+  window.ALGOVIZ_STATE = {
+    algorithm: "Binary Search",
+    category: "searching",
+    mode,
+    array: step.array,
+    target,
+    step: {
+      label: step.label,
+      title: step.title,
+      explanation: step.explanation,
+      next: step.next,
+      line: step.line,
+      comparisons: step.comparisons,
+      checked: step.checked,
+      remaining: step.remaining,
+      low: step.low,
+      high: step.high,
+      mid: step.mid,
+      activeIndex: step.activeIndex,
+      foundIndex: step.foundIndex,
+      done: step.done,
+      notFound: step.notFound
+    },
+    progress: `${currentStep + 1} / ${timeline.length}`
+  };
+
   ui.comparisons.textContent = step.comparisons;
   ui.checked.textContent = step.checked.length;
   ui.remaining.textContent = step.remaining;
